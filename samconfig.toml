@@ -3,10 +3,9 @@ version=0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "sam-app"
-capabilities = "CAPABILITY_IAM"
-region = "eu-west-2"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-m1kt1tea7s6c"
-s3_prefix = "sam-app"
+stack_name="sam-app"
+capabilities="CAPABILITY_IAM"
+region="eu-west-2"
+s3_bucket = "sam-cli-upload-bucket-sam-app"
+s3_prefix = "test"
 confirm_changeset = true
-image_repositories = []
