@@ -1,10 +1,9 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   sam-app
 
   Sample SAM Template for sam-app
-  
 
 Globals:
   Function:
@@ -14,7 +13,7 @@ Globals:
 
 Resources:
   HelloWorldFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       Handler: src/hello.handler
       Events:
@@ -23,3 +22,14 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+  TodoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: TodoTable
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
