@@ -1,15 +1,9 @@
+const { response } = require("./utils");
 
 const hello = async (event) => {
-        return {
-            statusCode: 200,
-            body: JSON.stringify({
-                message: 'hello world'
-                
-        
-            })
-        }
+  return response(200, { message: "Hello World" });
 };
 
-module.exports ={
-    handler:hello
-}
+module.exports = {
+  handler: hello,
+};

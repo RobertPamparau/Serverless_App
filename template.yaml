@@ -7,21 +7,112 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 30
     CodeUri: src/
     Runtime: nodejs14.x
 
 Resources:
-  HelloWorldFunction:
+  RestApiTest:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: test
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+  Hello:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/hello.handler
+      FunctionName: !Sub ${AWS::StackName}-HelloWorld
       Events:
         HelloWorld:
           Type: Api
           Properties:
             Path: /hello
             Method: get
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
+      
+  addTodo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/addTodo.handler
+      FunctionName: !Sub ${AWS::StackName}-addTodo
+      Events:
+        addTodo:
+          Type: Api
+          Properties:
+            Path: /add
+            Method: post
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
+  
+  fetchTodos:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/fetchTodos.handler
+      FunctionName: !Sub ${AWS::StackName}-fetchTodos
+      Events:
+        fetchTodos:
+          Type: Api
+          Properties:
+            Path: /add/
+            Method: get
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
+  fetchTodo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/fetchTodo.handler
+      FunctionName: !Sub ${AWS::StackName}-fetchTodo
+      Events:
+        fetchTodo:
+          Type: Api
+          Properties:
+            Path: /add/{id}
+            Method: get
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
+  updateTodo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/updateTodo.handler
+      FunctionName: !Sub ${AWS::StackName}-updateTodo
+      Events:
+        updateTodo:
+          Type: Api
+          Properties:
+            Path: /add/{id}
+            Method: put
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
+
   TodoTable:
     Type: AWS::DynamoDB::Table
     Properties:
