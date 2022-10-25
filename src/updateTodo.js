@@ -4,19 +4,21 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 
 const updateTodo = async (event) => {
   const { id } = event.pathParameters;
-  const { completed } = JSON.parse(event.body);
+  const params = JSON.parse(event.body);
+  const user = {
+    TableName: "TodoTable",
+    Key: { id },
+    UpdateExpression: "set",
+    ExpressionAttributeValues: {},
+    ReturnValues: "ALL_NEW",
+  };
+  for (const find in params) {
+    user.UpdateExpression += ` ${find} = :${find},`;
+    user.ExpressionAttributeValues[`:${find}`] = params[find];
+  }
+  user.UpdateExpression = user.UpdateExpression.slice(0, -1);
 
-  await dynamo
-    .update({
-      TableName: "TodoTable",
-      Key: { id },
-      UpdateExpression: "set completed = :completed",
-      ExpressionAttributeValues: {
-        ":completed": completed,
-      },
-      ReturnValues: "ALL_NEW",
-    })
-    .promise();
+  await dynamo.update(user).promise();
 
   try {
     return response(200, { message: "Todo updated" });

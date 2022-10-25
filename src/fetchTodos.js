@@ -4,7 +4,7 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 const fetchTodos = async (event) => {
   try {
     const results = await dynamo.scan({ TableName: "TodoTable" }).promise();
-    const  todos = results.Items;
+    const todos = results.Items;
 
     return response(200, todos);
   } catch (err) {

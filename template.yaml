@@ -57,7 +57,24 @@ Resources:
             - Effect: 'Allow'
               Action: '*'
               Resource: '*'
-  
+  register:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/register.handler
+      FunctionName: !Sub ${AWS::StackName}-register
+      Events:
+        register:
+          Type: Api
+          Properties:
+            Path: /add/register
+            Method: post
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
   fetchTodos:
     Type: AWS::Serverless::Function
     Properties:
