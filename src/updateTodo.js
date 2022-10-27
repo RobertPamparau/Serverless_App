@@ -1,12 +1,13 @@
 const AWS = require("aws-sdk");
-const { response } = require("./utils");
+const { response, status } = require("./utils");
 const dynamo = new AWS.DynamoDB.DocumentClient();
+const TableName = process.env.TABLE_NAME;
 
 const updateTodo = async (event) => {
   const { id } = event.pathParameters;
   const params = JSON.parse(event.body);
   const user = {
-    TableName: "TodoTable",
+    TableName: TableName,
     Key: { id },
     UpdateExpression: "set",
     ExpressionAttributeValues: {},
@@ -21,7 +22,7 @@ const updateTodo = async (event) => {
   await dynamo.update(user).promise();
 
   try {
-    return response(200, { message: "Todo updated" });
+    return response(status.OK, { message: "Todo updated" });
   } catch (err) {
     console.log(err);
   }

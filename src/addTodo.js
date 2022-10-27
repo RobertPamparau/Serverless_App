@@ -1,8 +1,10 @@
 const { v4 } = require("uuid");
 const AWS = require("aws-sdk");
-const { isValidEmail } = require("./utils");
+const { isValidEmail, status } = require("./utils");
 const { response } = require("./utils");
 const dynamo = new AWS.DynamoDB.DocumentClient();
+const TableName = process.env.TABLE_NAME;
+
 const addTodo = async (event) => {
   try {
     const id = v4();
@@ -12,16 +14,16 @@ const addTodo = async (event) => {
     newTodo.createdAt = createdAt;
 
     if (!isValidEmail(newTodo.email)) {
-      return response(401, { message: "Invalid email" });
+      return response(status.UNAUTHORIZED, { message: "Invalid email" });
     }
     await dynamo
       .put({
-        TableName: "TodoTable",
+        TableName: TableName,
         Item: newTodo,
       })
       .promise();
 
-    return response(200, newTodo);
+    return response(status.OK, newTodo);
   } catch (err) {
     console.log(err);
   }

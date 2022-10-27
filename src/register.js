@@ -1,35 +1,36 @@
 const { v4 } = require("uuid");
 const AWS = require("aws-sdk");
-const { response, isValidEmail } = require("./utils");
+const { response, isValidEmail, status } = require("./utils");
 const bcrypt = require("bcryptjs");
+require("dotenv").config();
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
+const TableName = process.env.TABLE_NAME;
 
 const register = async (event) => {
   const userId = v4();
   try {
     const { email, password } = JSON.parse(event.body);
     if (!email || !password) {
-      return response(401, { message: "Email or password is empty" });
+      return response(status.NOTFOUND, {
+        message: "Email or password is empty",
+      });
     }
 
     if (!isValidEmail(email)) {
-      return response(401, { message: "Invalid email" });
+      return response(status.UNAUTHORIZED, { message: "Invalid email" });
     }
 
     const params = {
-      TableName: "TodoTable",
+      TableName: TableName,
+      FilterExpression: "email = :email",
+      ExpressionAttributeValues: { ":email": email },
     };
 
-    const scanResults = [];
     const items = await dynamo.scan(params).promise();
-    items.Items.forEach((item) => scanResults.push(item));
-    params.ExclusiveStartKey = items.LastEvaluatedKey;
 
-    for (const results in scanResults) {
-      if (scanResults[results].email === email) {
-        return response(404, { message: "Email already exist" });
-      }
+    if (items.Items.length > 0) {
+      return response(status.UNAUTHORIZED, { message: "Email already exists" });
     }
 
     const encryptedPassword = bcrypt.hashSync(password.trim(), 10);
@@ -41,12 +42,12 @@ const register = async (event) => {
 
     await dynamo
       .put({
-        TableName: "TodoTable",
+        TableName: TableName,
         Item: user,
       })
       .promise();
 
-    return response(200, user);
+    return response(status.OK, user);
   } catch (err) {
     console.log(err);
   }

@@ -1,7 +1,7 @@
-const { response } = require("./utils");
+const { response, status } = require("./utils");
 
 const hello = async (event) => {
-  return response(200, { message: "Hello World" });
+  return response(status.OK, { message: "Hello World" });
 };
 
 module.exports = {
