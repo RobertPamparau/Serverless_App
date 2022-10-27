@@ -5,11 +5,23 @@ Description: >
 
   Sample SAM Template for sam-app
 
+
+
+Parameters:
+  Env:
+    TodoTable:
+      Type: String
+      Description: The name of the Users table to store details about the users
+      Default: TodoTable
+
 Globals:
   Function:
     Timeout: 30
     CodeUri: src/
     Runtime: nodejs14.x
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref TodoTable
 
 Resources:
   RestApiTest:
@@ -57,7 +69,24 @@ Resources:
             - Effect: 'Allow'
               Action: '*'
               Resource: '*'
-  
+  register:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/register.handler
+      FunctionName: !Sub ${AWS::StackName}-register
+      Events:
+        register:
+          Type: Api
+          Properties:
+            Path: /add/register
+            Method: post
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
   fetchTodos:
     Type: AWS::Serverless::Function
     Properties:

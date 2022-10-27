@@ -13,4 +13,10 @@ const response = (statusCode, body) => {
   };
 };
 
-module.exports = { isValidEmail, response };
+const status = {
+  UNAUTHORIZED: "401",
+  OK: "200",
+  NOTFOUND: "404",
+};
+
+module.exports = { isValidEmail, response, status };

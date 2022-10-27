@@ -9,3 +9,4 @@ region="eu-west-2"
 s3_bucket = "sam-cli-upload-bucket-sam-app"
 s3_prefix = "test"
 confirm_changeset = true
+parameter_overrides = "Env=\"Todos"
