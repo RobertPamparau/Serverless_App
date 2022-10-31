@@ -25,11 +25,17 @@ const register = async (event) => {
       TableName: TableName,
       FilterExpression: "email = :email",
       ExpressionAttributeValues: { ":email": email },
+      Limit: 5,
     };
+    let items = [];
+    let item = null;
+    do {
+      item = await dynamo.scan(params).promise();
+      params.ExclusiveStartKey = item.LastEvaluatedKey;
+      items = [...items, item.Items];
+    } while (item.LastEvaluatedKey);
 
-    const items = await dynamo.scan(params).promise();
-
-    if (items.Items.length > 0) {
+    if (items.length > 0) {
       return response(status.UNAUTHORIZED, { message: "Email already exists" });
     }
 
