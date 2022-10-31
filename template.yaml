@@ -16,7 +16,7 @@ Parameters:
 
 Globals:
   Function:
-    Timeout: 30
+    Timeout: 60
     CodeUri: src/
     Runtime: nodejs14.x
     Environment:
