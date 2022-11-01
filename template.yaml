@@ -87,6 +87,24 @@ Resources:
             - Effect: 'Allow'
               Action: '*'
               Resource: '*'
+  searchByEmail:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/searchByEmail.handler
+      FunctionName: !Sub ${AWS::StackName}-searchByEmail
+      Events:
+        register:
+          Type: Api
+          Properties:
+            Path: /add/search
+            Method: get
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
   fetchTodos:
     Type: AWS::Serverless::Function
     Properties:
