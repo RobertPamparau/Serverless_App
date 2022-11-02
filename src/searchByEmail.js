@@ -16,13 +16,10 @@ const searchByEmail = async (event) => {
       ExpressionAttributeValues: {
         ":email": email,
       },
+      ProjectionExpression: "email,todo,gender",
     };
 
     const item = await dynamo.scan(params).promise();
-    const add = item.Items;
-    for (const search in add) {
-      delete add[search].password;
-    }
     return response(status.OK, item.Items);
   } catch (err) {
     console.log(err);
