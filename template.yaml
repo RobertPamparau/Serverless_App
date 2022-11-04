@@ -123,6 +123,24 @@ Resources:
             - Effect: 'Allow'
               Action: '*'
               Resource: '*'
+  deleteTodo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/deleteTodo.handler
+      FunctionName: !Sub ${AWS::StackName}-deleteTodo
+      Events:
+        fetchTodos:
+          Type: Api
+          Properties:
+            Path: /delete/{id}
+            Method: delete
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
   fetchTodo:
     Type: AWS::Serverless::Function
     Properties:
