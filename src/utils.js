@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
 const isValidEmail = (email) => {
   return String(email)
     .toLowerCase()
@@ -19,4 +22,24 @@ const status = {
   NOTFOUND: "404",
 };
 
-module.exports = { isValidEmail, response, status };
+const generateToken = (userInfo) => {
+  if (!userInfo) {
+    return null;
+  }
+
+  return jwt.sign(userInfo, process.env.TOKEN_KEY, {
+    expiresIn: "1h",
+  });
+};
+
+const encryptedPassword = (password) => {
+  return bcrypt.hashSync(password.trim(), 10);
+};
+
+module.exports = {
+  isValidEmail,
+  response,
+  status,
+  generateToken,
+  encryptedPassword,
+};
