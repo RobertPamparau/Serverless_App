@@ -22,6 +22,7 @@ Globals:
     Environment:
       Variables:
         TABLE_NAME: !Ref TodoTable
+        TOKEN_KEY: "secret"
 
 Resources:
   RestApiTest:
@@ -79,6 +80,24 @@ Resources:
           Type: Api
           Properties:
             Path: /add/register
+            Method: post
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
+  login:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/login.handler
+      FunctionName: !Sub ${AWS::StackName}-login
+      Events:
+        register:
+          Type: Api
+          Properties:
+            Path: /add/login
             Method: post
             RestApiId: !Ref RestApiTest
       Policies:
