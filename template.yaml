@@ -51,7 +51,25 @@ Resources:
             - Effect: 'Allow'
               Action: '*'
               Resource: '*'
-      
+  logOut:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/logOut.handler
+      FunctionName: !Sub ${AWS::StackName}-logOut
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /logOut/{id}
+            Method: delete
+            RestApiId: !Ref RestApiTest
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: '*'
+              Resource: '*'
+          
   addTodo:
     Type: AWS::Serverless::Function
     Properties:

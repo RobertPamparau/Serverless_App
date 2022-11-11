@@ -1,6 +1,11 @@
 const { v4 } = require("uuid");
 const AWS = require("aws-sdk");
-const { response, isValidEmail, status, encryptedPassword } = require("./utils");
+const {
+  response,
+  isValidEmail,
+  status,
+  encryptedPassword,
+} = require("./utils");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
@@ -39,7 +44,7 @@ const register = async (event) => {
       return response(status.UNAUTHORIZED, { message: "Email already exists" });
     }
 
-    const encryptedPassword = encryptedPassword(password)
+    const encryptedPassword = encryptedPassword(password);
     const user = {
       id: userId,
       email: email.toLowerCase(),

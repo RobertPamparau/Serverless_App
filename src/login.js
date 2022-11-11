@@ -1,6 +1,7 @@
 const AWS = require("aws-sdk");
 const { response, isValidEmail, status, generateToken } = require("./utils");
 const bcrypt = require("bcryptjs");
+const updateTodo = require("./updateTodo");
 require("dotenv").config();
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
@@ -30,6 +31,7 @@ const login = async (event) => {
 
     const items = await dynamo.scan(params).promise();
     const search = items.Items;
+
     if (search.length === 0) {
       return response(status.UNAUTHORIZED, { message: "User does not exist" });
     }
@@ -51,7 +53,21 @@ const login = async (event) => {
     };
 
     const token = generateToken(userInfo);
-    return response(status.OK, { token: token });
+    const result = {
+      TableName: TableName,
+      Key: { id: search[0].id },
+      UpdateExpression: "set #token = :token",
+      ExpressionAttributeNames: { "#token": "token" },
+      ExpressionAttributeValues: {
+        ":token": token,
+      },
+
+      ReturnValues: "ALL_NEW",
+    };
+
+    await dynamo.update(result).promise();
+
+    return response(status.OK, token);
   } catch (err) {
     console.log(err);
   }
