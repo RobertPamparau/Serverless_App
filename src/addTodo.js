@@ -7,7 +7,8 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
 
 const addTodo = async (event) => {
-  verifyToken(event);
+  const decodedToken = verifyToken(event);
+  console.log(decodedToken);
   try {
     const id = v4();
     const createdAt = new Date().toISOString();
