@@ -2,18 +2,20 @@ const { v4 } = require("uuid");
 const AWS = require("aws-sdk");
 const { isValidEmail, status, encryptedPassword } = require("./utils");
 const { response } = require("./utils");
+const { verifyToken } = require("./verifyToken");
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
 
 const addTodo = async (event) => {
+  const decodedToken = verifyToken(event);
+  console.log(decodedToken);
   try {
     const id = v4();
     const createdAt = new Date().toISOString();
     const newTodo = JSON.parse(event.body);
     newTodo.id = id;
     newTodo.createdAt = createdAt;
-    const encryptedPassword1 = encryptedPassword(newTodo.password);
-    newTodo.password = encryptedPassword1;
+    newTodo.password = encryptedPassword(newTodo.password);
 
     if (!isValidEmail(newTodo.email)) {
       return response(status.UNAUTHORIZED, { message: "Invalid email" });

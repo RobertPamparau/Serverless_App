@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const AWS = require("aws-sdk");
+const dynamo = new AWS.DynamoDB.DocumentClient();
+const TableName = process.env.TABLE_NAME;
 
 const isValidEmail = (email) => {
   return String(email)
@@ -28,7 +31,7 @@ const generateToken = (userInfo) => {
   }
 
   return jwt.sign(userInfo, process.env.TOKEN_KEY, {
-    expiresIn: "1h",
+    expiresIn: "2h",
   });
 };
 
