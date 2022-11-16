@@ -6,7 +6,8 @@ Description: >
   Sample SAM Template for sam-app
 
 
-
+Plugins:
+  - serverless-offline-scheduler
 Parameters:
   Env:
     TodoTable:

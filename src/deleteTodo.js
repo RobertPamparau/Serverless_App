@@ -4,6 +4,7 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
 
 const deleteTodo = async (event) => {
+  const decodedToken = verifyToken(event);
   const { id } = event.pathParameters;
   const params = {
     TableName: TableName,
