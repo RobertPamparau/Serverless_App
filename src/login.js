@@ -1,7 +1,7 @@
 const AWS = require("aws-sdk");
 const { response, isValidEmail, status, generateToken } = require("./utils");
 const bcrypt = require("bcryptjs");
-const updateTodo = require("./updateTodo");
+const { sendEmail } = require("./sendEmail");
 require("dotenv").config();
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
@@ -53,6 +53,14 @@ const login = async (event) => {
     };
 
     const token = generateToken(userInfo);
+
+    const sendMail = await sendEmail({
+      html: `<h2>Hello!</h2><br><p>You are logged in to your account ${search[0].email}!</p>`,
+      email: search[0].email,
+      subject: "Assist Software",
+      text: "",
+    });
+
     const result = {
       TableName: TableName,
       Key: { id: search[0].id },

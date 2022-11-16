@@ -1,12 +1,14 @@
 const { CloudFormation } = require("aws-sdk");
 const AWS = require("aws-sdk");
 const { response, status } = require("./utils");
+const { verifyToken } = require("./verifyToken");
 require("dotenv").config();
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
 
 const searchByEmail = async (event) => {
+  const decodedToken = verifyToken(event);
   try {
     const { email } = JSON.parse(event.body);
 

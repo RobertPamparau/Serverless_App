@@ -1,9 +1,11 @@
 const AWS = require("aws-sdk");
 const { response, status } = require("./utils");
+const { verifyToken } = require("./verifyToken");
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
 
 const updateTodo = async (event) => {
+  const decodedToken = verifyToken(event);
   const { id } = event.pathParameters;
   const params = JSON.parse(event.body);
   const user = {
