@@ -25,6 +25,11 @@ const status = {
   NOTFOUND: "404",
 };
 
+const constants = {
+  USERNAME: "",
+  PASSWORD: "",
+};
+
 const generateToken = (userInfo) => {
   if (!userInfo) {
     return null;
@@ -45,4 +50,5 @@ module.exports = {
   status,
   generateToken,
   encryptedPassword,
+  constants,
 };

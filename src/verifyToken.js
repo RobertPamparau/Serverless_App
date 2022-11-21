@@ -10,7 +10,7 @@ const verifyToken = (event) => {
     }
 
     const decoded = jwt.verify(token, process.env.TOKEN_KEY);
-    return response(status.OK, decoded);
+    return decoded;
   } catch (err) {
     throw new Error(err);
   }
