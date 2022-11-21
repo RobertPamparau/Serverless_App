@@ -27,7 +27,7 @@ const status = {
 
 const constants = {
   USERNAME: "robert.pamparau@assist.ro",
-  PASSWORD: "Labus_123",
+  PASSWORD: "labus_123",
 };
 
 const generateToken = (userInfo) => {

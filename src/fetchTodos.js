@@ -8,6 +8,11 @@ const fetchTodos = async (event) => {
   const decodedToken = verifyToken(event);
   try {
     const results = await dynamo.scan({ TableName: TableName }).promise();
+
+    if (!results) {
+      return response(status.NOTFOUND, { message: "Items does not exists" });
+    }
+
     const toDos = results.Items;
 
     return response(status.OK, toDos);

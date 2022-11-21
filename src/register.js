@@ -30,7 +30,6 @@ const register = async (event) => {
       TableName: TableName,
       FilterExpression: "email = :email",
       ExpressionAttributeValues: { ":email": email },
-      Limit: 5,
     };
     let items = [];
     let item = null;
@@ -40,15 +39,15 @@ const register = async (event) => {
       items = [...items, item.Items];
     } while (item.LastEvaluatedKey);
 
-    if (items.length > 0) {
+    if (items[0].length > 0) {
       return response(status.UNAUTHORIZED, { message: "Email already exists" });
     }
 
-    const encryptedPassword = encryptedPassword(password);
+    const encryptPassword = encryptedPassword(password);
     const user = {
       id: userId,
       email: email.toLowerCase(),
-      password: encryptedPassword,
+      password: encryptPassword,
     };
 
     await dynamo

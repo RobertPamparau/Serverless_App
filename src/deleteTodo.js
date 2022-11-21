@@ -6,6 +6,9 @@ const TableName = process.env.TABLE_NAME;
 const deleteTodo = async (event) => {
   const decodedToken = verifyToken(event);
   const { id } = event.pathParameters;
+  if (!id) {
+    return response(status.NOTFOUND, { message: "Id is empty" });
+  }
   const params = {
     TableName: TableName,
     Key: { id },
